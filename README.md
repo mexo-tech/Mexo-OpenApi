@@ -1,6 +1,14 @@
 # Mexo Open Api
 
-* doc directory: include the openapi doc, you could make your sdk with the doc.
-* SDK directory: include java and python sdk
+* doc directory: Include the openapi doc, easily make your own sdk with the doc.
+* SDK directory: Include java and python sdk
 
-If you have any questions, please post your issues on the board, We will ack you as soon as we can.Thanks.
+# Api Endpoints for Mexo Broker
+| Name | base endpoint |
+| --- | --- |
+| rest-api | https://api.mexo.com |
+| web-socket-streams | wss://wsapi.mexo.com |
+| user-data-stream | wss://wsapi.mexo.com |
+
+
+#### If you have any question, please contact our customer service. We will answer you as soon as we can. Thanks.
