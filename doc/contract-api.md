@@ -1,11 +1,11 @@
 # Base Url
-The base url of broker open API can be found [here](doc/endpoint.md)
+The base url of broker open API can be found [here](endpoint.md)
 
 # Broker Contract Public Endpoint
 
 ## `brokerInfo`
 
-Current broker trading rules and symbol information.
+Broker trading rules and symbol information
 
 ### **Request Weight:**
 
@@ -18,50 +18,50 @@ GET /openapi/v1/brokerInfo
 
 ### **Parameters：**
 
-name|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | ----
-`type`|string|`NO`|| Trading section information. Possible values include `token`, `options`, and `contracts`. If the parameter is not sent, all trading information will be returned.
+`type`|string|`NO`|| Trading type information. Possible values include `token` and `contracts`. If this parameter is not sent, all trading information about the symbol will be returned.
 
 ### **Response:**
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`timezone`|string|`UTC`|Timezone of timestamp
-`serverTime`|long|`1554887652929`|Retrieves the current time on server (in ms).
+`timezone`|string|`UTC`|Timestamp
+`serverTime`|long|`1554887652929`|Return the current server timestamp (ms)
 
 In the `rateLimits` field:
-Order api request limit will be displayed.
+The request limitation of order api will be displayed.
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `rateLimitType`|string|`ORDERS`|Rate Limit type
 `interval`|string|`SECOND`|Rate Limit interval
-`limit`|string|`1500`|Rate Limit value within the interval.
+`limit`|string|`1500`|Rate Limit value within the interval
 
 In the `contracts` field:
-All actively trading contracts will be displayed.
+All information about current contract positions by the broker will be displayed.
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`symbol`|string|`BTCUSD`|Name of the contract.
-`status`|string|`TRADING`|Status of the contract.
-`baseAsset`|string|`BTCUSD`|Base Asset of the trading pair. In the case with contracts, the contract itself is the base asset.
-`baseAssetPrecision`|float|`0.001`|Precision of the contract quantity (baseAsset).
-`quoteAsset`|string|`USDT`|Quote asset for the contract. Meaning the contract is quoted in that currency.
-`quoteAssetPrecision`|float|`0.001`|Precision of the contract price (quoteAsset).
-`inverse`|bool|`true`|Whether the contract is inverse.
-`index`|string|`BTCUSDT`|Index symbol of the underlying asset. Index price can be accessed at the `index` endpoint. For instance, `BTC-PERP-REV` uses `BTCUSDT` for index price.
-`contractMultiplier`|string|`true`|The multiplier of contract.
-`icebergAllowed`|string|`false`|Whether iceberg orders are allowed.
+`symbol`|string|`BTCUSD`|Contract name
+`status`|string|`TRADING`|Contract status
+`baseAsset`|string|`BTCUSD`|Base asset. In the case, the contract itself is the base asset.
+`baseAssetPrecision`|float|`0.001`|Precision of the baseAsset(contract quantity)
+`quoteAsset`|string|`USDT`|Quote asset. For the contract, it means by which currency the contract is quoted.
+`quoteAssetPrecision`|float|`0.001`|Precision of the quote asset(contract price)
+`inverse`|bool|`true`|Whether the contract is inverse. True of false.
+`index`|string|`BTCUSDT`|Index symbol of the underlying asset. Index price can be accessed with the `index` endpoint. For example, `BTC-PERP-REV` uses `BTCUSDT` as index price.
+`contractMultiplier`|string|`true`|The multiplier of contract
+`icebergAllowed`|string|`false`|Whether iceberg order type is allowed. True or false.
 
 
-For `filters` in `contracts` field:
+In the `filters` field of `contracts`:
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`filterType`|string|`PRICE_FILTER`|Type of the filter.
+`filterType`|string|`PRICE_FILTER`|Type of the filter
 `minPrice`|float|`0.001`|Minimum price allowed
 `maxPrice`|float|`100000.00000000`|Maximum price allowed
-`tickSize`|float|`0.001`|Precision of the contract price.
+`tickSize`|float|`0.001`|Precision of the contract price
 `minQty`|float|`0.01`|Minimum quantity allowed
 `maxQty`|float|`100000.00000000`|Maximum quantity allowed
 `stepSize`|float|`0.001`|Precision of the contract quantity
@@ -69,11 +69,11 @@ name|type|example|description
 
 In the `riskLimits` filed:
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`quantity`|float|`100`| Positions below this amount follows the following requirement.
-`initialMargin`|float|`0.1`|Initial margin rate requirement.
-`maintMargin`|float|`0.03`|Minimum maintenance margin rate requirement.
+`quantity`|float|`100`| The limitation of position amount based on the following requirement
+`initialMargin`|float|`0.1`|Initial margin rate required
+`maintMargin`|float|`0.03`|Minimum maintenance margin rate required
 
 ### **Example:**
 ```js
@@ -157,50 +157,9 @@ name|type|example|description
 }
 ```
 
-## `insurance` **(PENDING)**
-Get current insurance funding.
-
-### **Request Weight:**
-0
-
-### **Request Url:**
-```bash
-GET /openapi/contract/v1/insurance
-```
-
-### **Parameters：**
-name|type|required|default|description
------------- | ------------ | ------------ | ------------ | ------------
-`symbol`|string|`NO`||Input specific symbol to return the corresponding records. If not entered, records for all symbols will be returned.
-`fromId`|long|`NO`||pagination,	return record which id < fromId
-`toId`|long|`NO`||pagination, return record which id > toId. If toId is given, toId cannot be 0.
-`limit`|integer|`NO`|20|Number of entries returned.
-
-### **Response:**
-name|type|example|description
------------- | ------------ | ------------ | ------------
-`id`|long|`1552272184833`|The ID of the record.
-`timestamp`|long|`155227218483`|current server timestamp.
-`value`|float|`23.23`|Balance of the insurance fund.
-`unit`|string|`BTC`|Unit of the balance..
-
-```js
-{
-  "BTC":[
-    {
-      "id": 1552272184833,
-      "timestamp": 155227218483,
-      "value": 23.23,
-      "unit": "BTC"
-    },...
-  ],...
-}
-```
-
-
 ## `index`
 
-Underlying asset index price.
+Index price of underlying asset 
 
 ### **Request Weight:**
 0
@@ -210,16 +169,15 @@ Underlying asset index price.
 GET /openapi/quote/v1/contract/index
 ```
 ### **Parameters：**
-name|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | ----
-symbol|string|`NO`||Underlying index symbol. If this parameter is not sent, all symbols
-will be returned.
+symbol|string|`NO`||The index symbol of underlying. If this parameter is not sent, all index symbols will be returned.
 
 ### **Response:**
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`index`|float|`8342.73`|The index price of the instrument.
-`EDP`|float|`8432.32`|The EDP (estimated delivery price of the contract). The average price of the index in the last 1o minutes. This will be the price on which the contract is going to be settled.
+`index`|float|`8342.73`|The index price of the underlying
+`EDP`|float|`8432.32`|The index EDP (estimated delivery price) of underlying. The average price of the index in the last 10 minutes. This will be the price when the contract is going to be settled.
 
 ### **Example:**
 ```js
@@ -241,7 +199,7 @@ name|type|example|description
 
 ## `fundingRate`
 
-Get current funding rate (*historical in process*)
+Get current funding rate (*historical under construction*)
 
 ### **Request Weight:**
 0
@@ -252,22 +210,22 @@ GET /openapi/contract/v1/fundingRate
 ```
 
 ### **Parameters：**
-name|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | ----
-`symbol`|string|`NO`||The contract to be returned. If not sent, records for all symbols will be returned as a result.
+`symbol`|string|`NO`||The contract symbol. If not sent, records for all symbols will be returned as the result.
 `state`|string|`NO`|`current`|Get `current` or `past` funding rate.
-`from`|long|`NO`||Timestamp to start.
-`to`|long|`NO`||Timestamp to end.
-`limit`|integer|`NO`|`20`| Number of entries returned.
+`from`|long|`NO`||Timestamp to start
+`to`|long|`NO`||Timestamp to end
+`limit`|integer|`NO`|`20`| The number of entries returned
 
 ### **Response:**
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`symbol`|string|`BTCUSD`|Name of the contracts
-`intervalStart`|long|`1554710400000`|Timestamp when the interval started.
-`intervalEnd`|long|`1554710400000`|Timestamp when the interval ended.
-`rate`|float|`0.00321`|The funding rate of this interval.
-`index`|float|`10076.34`|Index price at the time of settlement.
+`symbol`|string|`BTCUSD`|The contract symbol
+`intervalStart`|long|`1554710400000`|Timestamp when the interval start
+`intervalEnd`|long|`1554710400000`|Timestamp when the interval end
+`rate`|float|`0.00321`|The funding rate of this interval
+`index`|float|`10076.34`|Index price at the time of settlement
 
 ### **Example:**
 
@@ -284,7 +242,7 @@ name|type|example|description
 
 ## `depth`
 
-Retrieves the contracts order book.
+Retrieve the contracts order book.
 
 
 ### **Request Weight:**
@@ -304,21 +262,21 @@ GET /openapi/quote/v1/contract/depth
 ```
 
 ### **Parameters:**
-parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -----
-`symbol`|string|`YES`||The contract name for which to retrieve the order book
-`limit`|integer|`NO`|`100` (max = 100)|The number of entries to return for bids and asks.
+`symbol`|string|`YES`||The contract symbol to be retrieved
+`limit`|integer|`NO`|`100` (max = 100)|The number of entries returned for bids and asks
 
 ### **Response:**
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `time`|long|`1550829103981`|Current timestamp (ms)
-`bids`|list|(see below)|List of all bids, best bids first. See below for entry details.
-`asks`|list|(see below)|List of all asks, best asks first. See below for entry details.
+`bids`|list|(see below)|List of all bids details, best bids first. 
+`asks`|list|(see below)|List of all asks details, best asks first. 
 
 The fields `bids` and `asks` are lists of orderbook price level entries, sorted from best to worst.
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `''`|float|`123.10`|price level
 `''`|float|`300`|The total quantity of orders for this price level
@@ -375,14 +333,14 @@ GET /openapi/quote/v1/contract/trades
 ### **Parameters：**
 Parameter|type|required|default|description
 ------------ | ------------ | ------------ | ------------ | ------
-`symbol`|string|`YES`||The name of the contract.
-`limit`|integer|`NO` (clamped to max 1000)|`100`|The number of trades returned
+`symbol`|string|`YES`||The contract symbol
+`limit`|integer|`NO` (clamped to max 1000)|`100`|The number of filled trades returned
 
 ### **Response:**
 
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`price`|float|`0.055`|The price of the trade
+`price`|float|`0.055`|Trade price
 `time`|long|`1537797044116`|Current timestamp (ms)
 `qty`|float|`5`|The quantity traded
 `isBuyerMaker`|string|`true`|Maker or taker of the trade. `true`= maker, `false` = taker
@@ -402,7 +360,7 @@ name|type|example|description
 
 ## `klines`
 
-Retrieves the kline information (open, high, trade volume, etc.) for a specific contract.
+Retrieves the kline information (open, high, low, trade volume, etc.) for a specific contract.
 
 ### **Request Weight:**
 
@@ -414,56 +372,53 @@ GET /openapi/quote/v1/contract/klines
 ```
 
 ### **Parameters：**
-| Parameter|type|required|default|description |
+| Name|Type|Required|Default|Description |
 | ------------ | ------------ | ------------ | ------------ | ---- |
-|`symbol`|string|`YES`||Name of the contract.|
-|`interval`|string|`YES`||Interval of the kline. Possible values include: `1m`,`5m`,`15m`,`30m`,`1h`,`1d`,`1w`,`1M`|
-|`limit`|integer|`NO`|`1000`|Number of entries returned. Max is capped at 1000.|
+|`symbol`|string|`YES`||The contract symbol.|
+|`interval`|string|`YES`||Interval of the kline. Identifiable values: `1m`,`5m`,`15m`,`30m`,`1h`,`1d`,`1w`,`1M`|
+|`limit`|integer|`NO`|`1000`|The maxium number of entries returned is 1000.|
 |`to`|integer|`NO`||timestamp of the last datapoint|
 
 ### **Response:**
-name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`''`|long|`1538728740000`|Open Time
+`''`|long|`1538728740000`|Open timestamp
 `''`|float|`36.00000`|Open
 `''`|float|`36.00000`|High
 `''`|float|`36.00000`|Low
 `''`|float|`36.00000`|Close
-`''`|float|`148976.11427815`|Trade volume amount
-`''`|long|`1538728740000`|Close time
-`''`|float|`2434.19055334`|Quote asset volume
-`''`|integer|`308`|Number of trades
-`''`|float|`1756.87402397`|Taker buy base asset volume
-`''`|float|`28.46694368`|Taker buy quote asset volume
+`''`|float|`148976.11427815`|Trade amount
+`''`|long|`1538728740000`|Close timestamp
+`''`|float|`2434.19055334`|Quote asset amount
+`''`|integer|`308`|The number of filled trades
+`''`|float|`1756.87402397`|Taker buy base asset amount
+`''`|float|`28.46694368`|Taker buy quote asset amount
 
 
 ### **Example:**
 ```js
 [
   [
-    1538728740000, //'opentime'
-    "36.000000000000000000", //'open'
-    "36.000000000000000000", //'high'
-    "36.000000000000000000", //'low':
-    "36.000000000000000000", //'close'
-    "148976.11427815",  // Volume
-    1499644799999,      // Close time
-    "2434.19055334",    // Quote asset volume
-    308,                // Number of trades
-    "1756.87402397",    // Taker buy base asset volume
-    "28.46694368"       // Taker buy quote asset volume
+    1538728740000, //Open timestamp
+    "36.000000000000000000", //open
+    "36.000000000000000000", //high
+    "36.000000000000000000", //low
+    "36.000000000000000000", //close
+    "148976.11427815",  // Trade amount
+    1499644799999,      // Close timestamp
+    "2434.19055334",    // Quote asset amount
+    308,                // The number of filled trades
+    "1756.87402397",    // Taker buy base asset amount
+    "28.46694368"       // Taker buy quote asset amount
   ],...
 ]
 ```
-`base asset` means the quantity is expressed as the amount of contracts that were received by the buyer.
-
-`quote asset` means the amount of tokens paid to acquire the contracts.
 
 # Private Endpoints
 
 ## `order`
 
-Places order for a contract. This API endpoint requires your request to be signed.
+Places order for a contract. This API endpoint requires your request signed.
 
 ### **Request Weight:**
 
@@ -475,46 +430,46 @@ POST /openapi/contract/v1/order
 ```
 
 ### **Parameters：**
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | ------------
-`symbol`|string|`YES`||Name of the contract.
-`side`|string|`YES`||Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`orderType`|string|`YES`||The order type, possible types: `LIMIT`, `STOP`
-`quantity`|float|`YES`||The number of contracts to buy.
-`leverage`|float|`YES`(**NOT REQUIRED** for \*\_CLOSE" orders)||Leverage of the order.
-`price`|float|`NO`. **REQUIRED** for (`LIMIT` & `INPUT`) orders||Price of the order
-`priceType`|string|`NO`|`INPUT`|The price type, possible types include: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`triggerPrice`|float|`NO`. **REQUIRED** for `STOP` orders.||The price at which the trigger order will be executed.
-`timeInForce`|string|`NO`|`GTC`|Time in force for `LIMIT` orders. Possible values include `GTC`,`FOK`,`IOC`,`LIMIT_MAKER`.
-`clientOrderId`|string/long|`YES`||A unique ID of the order (user defined)
+`symbol`|string|`YES`||The contract symbol
+`side`|string|`YES`||Direction of the order. Direction type: `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`
+`orderType`|string|`YES`||The order type, includes: `LIMIT`, `STOP`
+`quantity`|float|`YES`||The number of contracts to buy
+`leverage`|float|`YES`(**NOT REQUIRED** for \*\_CLOSE" orders)||Leverage of the order
+`price`|float|`NO`. **REQUIRED** for (`LIMIT` & `INPUT`) orders||Order price
+`priceType`|string|`NO`|`INPUT`|The price type,  includes: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
+`triggerPrice`|float|`NO`. **REQUIRED** for `STOP` orders.||The price at which the trigger order will be executed
+`timeInForce`|string|`NO`|`GTC`|Time in force for `LIMIT` orders. Type includes `GTC`,`FOK`,`IOC`,`LIMIT_MAKER`.
+`clientOrderId`|string/long|`YES`||An unique ID for the order (user defined)
 
 **NOTE** For **Market Orders**, you need to set `orderType` as **`LIMIT`** **AND** `priceType` as **`MARKET`**.
 
-You can get contracts' price, quantity precision configuration data in the `brokerInfo` endpoint.
+You can get contract price and quantity precision configuration data in the `brokerInfo` endpoint.
 
 Note: if your balance does not meet the margin requirement (which is the minimum margin requirement + open position fee + close position fee), "*insufficient balance*" error message will be returned.
 
-For detailed information regarding various *price types* and *order types*. Please refer to the explanation section in the end.
+For more details about *price types* and *order types*, please refer to the explanation section in the end.
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`time`|long|`1570759718825`|Timestamp when the order is created.
-`updateTime`|long|`1551062936784`|Last time this order was updated
-`orderId`|integer|`469961015902208000`|ID of the order.
-`clientOrderId`|string|`213443`|A unique ID of the order.
-`symbol`|string|`BTC-PERP-REV`|Name of the contract.
-`price`|float|`8200`|Price of the order.
-`leverage`|float|`4`|Leverage of the order.
-`origQty`|float|`1.01`|Quantity ordered
-`executedQty`|float|`1.01`|Quantity of orders that has been executed
-`avgPrice`|float|`4754.24`|Average price of filled orders.
-`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the actually margin needed plus fees to open and close the position.
-`orderType`|string|`YES`|The order type, possible types: `LIMIT`, `STOP`
-`priceType`|string|`INPUT`|The price type. Possible values include `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`side`|string|`BUY`|Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`status`|string|`NEW`|The state of the order.Possible values include `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
-`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
+`time`|long|`1570759718825`|Timestamp when the order is created
+`updateTime`|long|`1551062936784`|Timestamp when this order was updated last time
+`orderId`|integer|`469961015902208000`|The order ID
+`clientOrderId`|string|`213443`|An unique order ID whic is defined by user 
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`8200`|The order price
+`leverage`|float|`4`|Leverage of the order
+`origQty`|float|`1.01`|Order quantity
+`executedQty`|float|`1.01`|The number of orders that has been executed
+`avgPrice`|float|`4754.24`|Average price of filled orders
+`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the `actual margin` plus fees to open and close the position.
+`orderType`|string|`YES`|The order type: `LIMIT`, `STOP`
+`priceType`|string|`INPUT`|The price type includes `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
+`side`|string|`BUY`|Direction of the order: `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
+`status`|string|`NEW`|The order status: `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
+`timeInForce`|string|`GTC`|Time in force: `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
 `fees`|||Fees incurred for this order.
 
 ### **Example:**
@@ -542,7 +497,7 @@ Name|type|example|description
 
 ## `cancel`
 
-Cancels an order, specified by `orderId` or `clientOrderId`. This API endpoint requires your request to be signed.
+Cancels an order, `orderId` or `clientOrderId` is required. This API endpoint requires your request signed.
 
 ### **Request Weight:**
 
@@ -555,41 +510,41 @@ DELETE /openapi/contract/v1/order/cancel
 
 ### **Parameter:**
 
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -----
-`orderId`|integer|`NO`||The order ID of the order to be canceled
-`clientOrderId`|string|`NO`||Unique client customized ID of the order.
-`orderType`|string|`YES`||The order type, possible types: `LIMIT` and `STOP`.
+`orderId`|integer|`NO`||The order ID
+`clientOrderId`|string|`NO`||Unique client customized ID for the order
+`orderType`|string|`YES`||The order type: `LIMIT` and `STOP`
 
-One **MUST** be provided for either of these two parameters.
+ `orderId` and `clientOrderId`, at least one **MUST** be provided.
 
 ### **Response:**
 
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`time`|long|`1551062936784`|Timestamp when the order is created.
-`updateTime`|long|`1551062936784`|Last time this order was updated
-`orderId`|integer|`891`|ID of the order.
-`clientOrderId`|string|`213443`|A unique ID of the order.
-`symbol`|string|`BTC-PERP-REV`|Name of the contract.
-`price`|float|`4765.29`|Price of the order.
-`leverage`|float|`4`|Leverage of the order.
-`origQty`|float|`1.01`|Quantity ordered
-`executedQty`|float|`1.01`|Quantity of orders that has been executed
-`avgPrice`|float|`4754.24`|Average price of filled orders.
-`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the actually margin needed plus fees to open and close the position.
-`orderType`|string|`LIMIT`|The order type, possible types: `LIMIT` and `STOP`.
-`priceType`|string|`INPUT`|The price type. Possible values include `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`side`|string|`BUY_OPEN`|Direction of the order. Possible values include `BUY_OPEN`, `BUY_CLOSE`, `SELL_OPEN` and `SELL_CLOSE`
-`status`|string|`NEW`|The state of the order.Possible values include `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
+`time`|long|`1551062936784`|Timestamp when the order is created
+`updateTime`|long|`1551062936784`|Timestamp when this order was updated last time
+`orderId`|integer|`891`|The order ID
+`clientOrderId`|string|`213443`|An unique order ID defined by client 
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`4765.29`|The order price
+`leverage`|float|`4`|Leverage of the order
+`origQty`|float|`1.01`|The quantity of the order
+`executedQty`|float|`1.01`|The quantity of orders that has been executed
+`avgPrice`|float|`4754.24`|Average price of filled orders
+`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the `actual margin` needed plus fees to open and close the position.
+`orderType`|string|`LIMIT`|The order type: `LIMIT` and `STOP`
+`priceType`|string|`INPUT`|The price type: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`
+`side`|string|`BUY_OPEN`|Direction of the order: `BUY_OPEN`, `BUY_CLOSE`, `SELL_OPEN` and `SELL_CLOSE`
+`status`|string|`NEW`|The status of the order: `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
 `timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
 `fees`|||Fees incurred for this order.
 
 In the `fees` field:
 
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`feeToken`|string|`USDT`|Fee token kind.
+`feeToken`|string|`USDT`|transaction fee type
 `fee`|float|`0`|Actual transaction fees occurred.
 
 ###  **Example:**
@@ -616,44 +571,9 @@ Name|type|example|description
 }
 ```
 
-### `batchCancel`
-
-Cancel orders en masse. (**PENDING: batch cancel for STOP orders**)
-
-
-### **Request Weight:**
-
-1
-
-### **Request Url:**
-```bash
-DELETE /openapi/contract/v1/order/batchCancel
-```
-### **Parameter:**
-
-Parameter|type|required|default|description
------------- | ------------ | ------------ | ------------ | -----
-`symbol`|string/list|`NO`||The symbol ids of the cancel orders
-
-### **Response:**
-Name|type|example|description
------------- | ------------ | ------------ | ------------
-`message`|string|`success`|The message response of the cancel request.
-`timestamp`|long|`1541161088303`|The timestamp when the response is returned.
-
-###  **Example:**
-
-```js
-{
-  'message':'success',
-  'timestamp':1541161088303
-}
-```
-
-
 ### `openOrders`
 
-Retrieves open orders. This API endpoint requires your request to be signed.
+Retrieves open orders. This API endpoint requires your request signed.
 
 ### **Request Weight:**
 
@@ -665,34 +585,34 @@ GET /openapi/contract/v1/openOrders
 ```
 
 ### **Parameters:**
-Parameter|type|required|default|description
+Parameter|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | --------
-`symbol`|string|`NO`||Symbol to return open orders for. If not sent, orders of all contracts will be returned.
+`symbol`|string|`NO`||Symbol of open orders. If not sent, all kinds of contract open orders will be returned.
 `orderId`|integer|`NO`|| Order ID
-`orderType`|string|`YES`||The order type, possible types: `LIMIT` and `STOP`.
-`limit`|integer|`NO`|`20`|Number of entries to return.
+`orderType`|string|`YES`||The order type: `LIMIT` and `STOP`.
+`limit`|integer|`NO`|`20`|The number of entries returned.
 
-If `orderId` is set, it will get orders < that `orderId`. Otherwise most recent orders are returned.
+If `orderId` is set, it will get orders whose `orderId` < that `orderId`. Otherwise the lastest open orders are returned.
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `time`|long|`1551062936784`|Timestamp when the order is created.
-`updateTime`|long|`1551062936784`|Last time this order was updated
-`orderId`|integer|`891`|ID of the order.
-`clientOrderId`|string|`213443`|A unique ID of the order.
-`symbol`|string|`BTC-PERP-REV`|Name of the contracts.
-`price`|float|`4765.29`|Price of the order.
+`updateTime`|long|`1551062936784`|Timestamp when this order was updated last time
+`orderId`|integer|`891`|The order ID
+`clientOrderId`|string|`213443`|An unique order ID defined by client
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`4765.29`|The order price
 `leverage`|float|`4`|Leverage of the order.
-`origQty`|float|`1.01`|Quantity ordered
-`executedQty`|float|`1.01`|Quantity of orders that has been executed
+`origQty`|float|`1.01`|The quantity of the order
+`executedQty`|float|`1.01`|The quantity of orders that has been executed
 `avgPrice`|float|`4754.24`|Average price of filled orders.
-`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the actually margin needed plus fees to open and close the position.
-`orderType`|string|`LIMIT`|The order type, possible types: `LIMIT` and `STOP`.
-`priceType`|string|`INPUT`|The price type. Possible values include `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`side`|string|`BUY_OPEN`|Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`status`|string|`NEW`|The state of the order.Possible values include `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
-`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`.
+`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the `actual margin` needed plus fees to open and close the position.
+`orderType`|string|`LIMIT`|The order type: `LIMIT` and `STOP`
+`priceType`|string|`INPUT`|The price type: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`
+`side`|string|`BUY_OPEN`|Direction of the order: `BUY_OPEN`, `BUY_CLOSE`, `SELL_OPEN` and `SELL_CLOSE`
+`status`|string|`NEW`|The status of the order: `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`
+`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
 `fees`|||Fees incurred for this order.
 
 ### **Example:**
@@ -723,7 +643,7 @@ Name|type|example|description
 
 ## `historyOrders`
 
-Retrieves history of orders that have been partially or fully filled or canceled. This API endpoint requires your request to be signed.
+Retrieves history of orders that have been partially or fully filled or canceled. This API endpoint requires your request signed.
 
 ### **Request Weight:**
 
@@ -735,34 +655,34 @@ GET /openapi/contract/v1/historyOrders
 ```
 
 ### **Parameters:**
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | --------
-`symbol`|string|`NO`||Symbol to return open orders for. If not sent, orders of all contracts will be returned.
+`symbol`|string|`NO`||Symbol for history orders. If not sent, all contract history orders will be returned.
 `orderId`|integer|`NO`|| Order ID
-`orderType`|string|`YES`||The order type, possible types: `LIMIT`, `STOP`
-`limit`|integer|`NO`|`20`|Number of entries to return.
+`orderType`|string|`YES`||The order type: `LIMIT`, `STOP`
+`limit`|integer|`NO`|`20`|The number of entries returned.
 
-If `orderId` is set, it will get orders < that `orderId`. Otherwise most recent orders are returned.
+If `orderId` is set, it will get orders whose `orderId` < that `orderId`. Otherwise the lastest open orders are returned.
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `time`|long|`1551062936784`|Timestamp when the order is created.
-`updateTime`|long|`1551062936784`|Last time this order was updated
-`orderId`|integer|`891`|ID of the order.
-`clientOrderId`|string|`213443`|A unique ID of the order.
-`symbol`|string|`BTC-PERP-REV`|Name of the contracts.
-`price`|float|`4765.29`|Price of the order.
-`leverage`|float|`4`|Leverage of the order.
-`origQty`|float|`1.01`|Quantity ordered
-`executedQty`|float|`1.01`|Quantity of orders that has been executed
+`updateTime`|long|`1551062936784`|Timestamp when this order was updated last time
+`orderId`|integer|`891`|The order ID
+`clientOrderId`|string|`213443`| An unique ID of the order
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`4765.29`|The order price
+`leverage`|float|`4`|Leverage of the order
+`origQty`|float|`1.01`|The quantity of the order
+`executedQty`|float|`1.01`|The quantity of orders that has been executed
 `avgPrice`|float|`4754.24`|Average price of filled orders.
-`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the actually margin needed plus fees to open and close the position.
-`orderType`|string|`LIMIT`|The order type, possible types: `LIMIT` and `STOP`.
-`priceType`|string|`INPUT`|The price type. Possible values include `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`side`|string|`BUY_OPEN`|Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`status`|string|`NEW`|The state of the order.Possible values include `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
-`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`.
+`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the `actual margin` needed plus fees to open and close the position.
+`orderType`|string|`LIMIT`|The order type: `LIMIT` and `STOP`
+`priceType`|string|`INPUT`|The price type: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
+`side`|string|`BUY_OPEN`|Direction of the order: `BUY_OPEN`, `BUY_CLOSE`, `SELL_OPEN` and `SELL_CLOSE`
+`status`|string|`NEW`|The status of the order: `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
+`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
 `fees`|||Fees incurred for this order.
 
 ### **Example:**
@@ -792,7 +712,7 @@ Name|type|example|description
 ```
 
 ## `getOrder`
-Get details on a specific order, regardless of order state.
+Get details on a specific order
 
 ### **Request Weight:**
 
@@ -804,34 +724,35 @@ GET /openapi/contract/v1/getOrder
 ```
 
 ### **Parameters:**
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -------
-`orderId`|integer|`NO`|| Order ID.
-`clientOrderId`|string|`NO`||Unique client customized ID of the order.
-`orderType`|string|`YES`||The order type, possible types: `LIMIT`, `STOP`
+`symbol`|string|`NO`||Symbol for history orders. If not sent, all contract history orders will be returned.
+`orderId`|integer|`NO`|| Order ID
+`orderType`|string|`YES`||The order type: `LIMIT`, `STOP`
 
 **Either `orderId` or `clientOrderId` must be sent**
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`time`|long|`1551062936784`|Timestamp when the order is created.
-`updateTime`|long|`1551062936784`|Last time this order was updated
-`orderId`|integer|`891`|ID of the order.
-`clientOrderId`|string|`213443`|A unique ID of the order.
-`symbol`|string|`BTC-PERP-REV`|Name of the contracts.
-`price`|float|`4765.29`|Price of the order.
-`leverage`|float|`4`|Leverage of the order.
-`origQty`|float|`1.01`|Quantity ordered
-`executedQty`|float|`1.01`|Quantity of orders that has been executed
-`avgPrice`|float|`4754.24`|Average price of filled orders.
-`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the actually margin needed plus fees to open and close the position.
-`orderType`|string|`LIMIT`|The order type, possible types: `LIMIT` and `STOP`.
-`priceType`|string|`INPUT`|The price type. Possible values include `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
-`side`|string|`BUY_OPEN`|Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`status`|string|`NEW`|The state of the order.Possible values include `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
-`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`.
+`time`|long|`1551062936784`|Timestamp when the order is created
+`updateTime`|long|`1551062936784`|Timestamp when this order was updated last time
+`orderId`|integer|`891`|The order ID
+`clientOrderId`|string|`213443`|An unique order ID defined by client 
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`4765.29`|The order price
+`leverage`|float|`4`|Leverage of the order
+`origQty`|float|`1.01`|The quantity of the order
+`executedQty`|float|`1.01`|The quantity of orders that has been executed
+`avgPrice`|float|`4754.24`|Average price of filled orders
+`marginLocked`|float|`200`|Amount of margin locked for this order. This includes the `actual margin` needed plus fees to open and close the position.
+`orderType`|string|`LIMIT`|The order type: `LIMIT` and `STOP`
+`priceType`|string|`INPUT`|The price type: `INPUT`, `OPPONENT`, `QUEUE`, `OVER`, and `MARKET`.
+`side`|string|`BUY_OPEN`|Direction of the order: `BUY_OPEN`, `BUY_CLOSE`, `SELL_OPEN` and `SELL_CLOSE`
+`status`|string|`NEW`|The status of the order: `NEW`, `PARTIALLY_FILLED`, `FILLED`, `CANCELED`, and `REJECTED`.
+`timeInForce`|string|`GTC`|Time in force. Possible values include `GTC`,`FOK`,`IOC`, and `LIMIT_MAKER`
 `fees`|||Fees incurred for this order.
+
 
 ### **Example:**
 
@@ -870,27 +791,27 @@ GET /openapi/contract/v1/myTrades
 ```
 
 ### **Parameters:**
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -------
-`symbol`|string|`NO`|| Name of the contract. If not sent, trades for all symbols will be returned.
-`limit`|integer|`NO`|`20`|The number of trades returned (clamped to max 1000)
-`fromId`|integer|`NO`||TradeId to fetch from.
-`toId`|integer|`NO`||TradeId to fetch to.
+`symbol`|string|`NO`|| The contract symbol. If not sent, trade history for all contacts will be returned.
+`limit`|integer|`NO`|`20`|The number of trades returned (maxium 1000)
+`fromId`|integer|`NO`||TradeId retrieved from.
+`toId`|integer|`NO`||TradeId retrieved to.
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
 `time`|long|`1551062936784`|Timestamp when the order is created.
-`tradeId`|long|`49366`|The ID for the trade
-`orderId`|integer|`891`|ID of the order.
-`matchOrderId`|long|`630491432`| ID of the match order.
-`symbolId`|string|`BTC-PERP-REV`|Name of the contract.
-`price`|float|`4765.29`|Price of the trade.
-`quantity`|float|`1.01`|Quantity of the trade.
-`feeTokenId`|string|`USDT`|Fee token name.
-`fee`|||Fee of the trade.
-`side`|string|`BUY`|Direction of the order. Possible values include `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
-`orderType`|string|`LIMIT`|The order type, possible types: LIMIT, MARKET
+`tradeId`|long|`49366`|The trade ID
+`orderId`|integer|`891`|The order ID
+`matchOrderId`|long|`630491432`| The match order ID
+`symbolId`|string|`BTC-PERP-REV`|The contract symbol
+`price`|float|`4765.29`|The trade price
+`quantity`|float|`1.01`|The quantity of the trade.
+`feeTokenId`|string|`USDT`|Transaction fee token name
+`fee`|||Transaction fee
+`side`|string|`BUY`|Direction of the order: `BUY_OPEN`, `SELL_OPEN`, `BUY_CLOSE`, and `SELL_CLOSE`.
+`orderType`|string|`LIMIT`|The order type: LIMIT, MARKET
 `pnl`|float|`100.1`|Profit and loss
 
 
@@ -918,7 +839,7 @@ Name|type|example|description
 
 ## `positions`
 
-Retrieves current positions. This API endpoint requires your request to be signed.
+Retrieves current positions. This API endpoint requires your request signed.
 
 ### **Request Weight:**
 
@@ -930,28 +851,28 @@ GET /openapi/contract/v1/positions
 ```
 
 ### **Parameters:**
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | --------
-`symbol`|string|`NO`||Name of the contract. If not sent, positions for all contracts will be returned.
+`symbol`|string|`NO`||The contract symbol. If not sent, positions for all contracts will be returned.
 `side`|string|`NO`||`LONG` or `SHORT`. Direction of the position. If not sent, positions for both sides will be returned.
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`symbol`|string|`BTC-PERP-REV`|Name of the contract.
-`side`|string|`LONG`|Position side.
-`avgPrice`|float|`100`|Average price for opening the position.
-`position`|float|`20`|Amount of contracts opened
-`available`|float|`15`|Amount of contracts available to close.
+`symbol`|string|`BTC-PERP-REV`|The contract name
+`side`|string|`LONG`|Position side
+`avgPrice`|float|`100`|Average price for opening position
+`position`|float|`20`|The quantity of contracts opened
+`available`|float|`15`|The quantity of contracts available to be close
 `leverage`|float|`5`|Leverage of the position
-`lastPrice`|float|`100`|Last trade price of the symbol.
-`positionValue`|float|`2000`|Current position value.
-`flp`|float|`80`|Forced liquidation price.
-`margin`|float|`20`|Margin for this position.
+`lastPrice`|float|`100`|The latest trade price
+`positionValue`|float|`2000`|Current position value
+`flp`|float|`80`|Forced liquidation price
+`margin`|float|`20`|Margin for this position
 `marginRate`|float|`0.2`|Margin rate for current position.
 `unrealizedPnL`|float|`0.0`|Unrealized profit and loss for current position held.
 `profitRate`|float|`0.0000333`|Rate of return for the position.
-`realizedPnL`|float|`6.8`|Cumulative realized profit and loss for this `symbol`.
+`realizedPnL`|float|`6.8`|Cumulative realized profit and loss for this `position`.
 
 
 ### **Example:**
@@ -979,7 +900,7 @@ Name|type|example|description
 ## `account`
 
 This endpoint is used to retrieve contract account balance. This endpoint requires
-you to be signed.
+your request signed.
 
 ### **Request Weight:**
 1
@@ -993,12 +914,12 @@ GET  /openapi/contract/v1/account
 None
 
 ### **Response:**
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`total`|float|`131.06671401`|Total balance.
-`availableMargin`|float|`131.0545541`|Available margin for use.
-`positionMargin`|float|`0.01215991`|Margin for positions.
-`orderMargin`|float|`0`| Margin locked for open orders.
+`total`|float|`131.06671401`|Total balance
+`availableMargin`|float|`131.0545541`|Available margin for use
+`positionMargin`|float|`0.01215991`|Margin for positions
+`orderMargin`|float|`0`| Margin locked for opening orders
 
 ### **Example:**
 
@@ -1015,7 +936,7 @@ Name|type|example|description
 
 ## `modifyMargin`
 
-Modify margin for a specific symbol. This endpoint requires your position to be signed.
+Modify margin for a specific symbol. This endpoint requires your request signed.
 
 ### **Request Weight:**
 1
@@ -1027,18 +948,18 @@ POST  /openapi/contract/v1/modifyMargin
 
 ### **Parameters:**
 
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -------
-`symbol`|string|`YES`||The symbol's margin to be modified.
+`symbol`|string|`YES`||The contract symbol
 `side`|string|`YES`||LONG or SHORT. Direction of the position.
-`amount`|float|`YES`||Amount of margin to be added (Positive Value) or removed (Negative Value). Please note that this amount refers to the underlying quote asset of the asset.
+`amount`|float|`YES`||The amount of margin to be added (Positive Value) or removed (Negative Value). Please note that this amount refers to the underlying quote asset of contract.
 
 ### **Response:**
 
-Name|type|example|description
+Name|Type|Example|Description
 ------------ | ------------ | ------------ | ------------
-`symbol`|string|`BTC-PERP-REV`|The name of the contract.
-`margin`|float|`12.3`|Updated margin for the symbol.
+`symbol`|string|`BTC-PERP-REV`|The contract symbol
+`margin`|float|`12.3`|Updated margin for the contract
 `timestamp`|long|`1541161088303`|Updated timestamp
 
 ### **Example:**
@@ -1052,8 +973,7 @@ Name|type|example|description
 
 ## `transfer` **(PENDING)**
 
-This endpoint is used to transfer funds across different accounts. This endpoint requires
-you to be signed.
+This endpoint is used to transfer funds across different accounts. This endpoint requires your request signed.
 
 ### **Request Weight:**
 1
@@ -1065,14 +985,14 @@ POST  /openapi/v1/transfer
 
 ### **Parameters:**
 
-Parameter|type|required|default|description
+Name|Type|Required|Default|Description
 ------------ | ------------ | ------------ | ------------ | -------
 `from`|string|`YES`||Transfer from which account.
 `to`|string|`YES`||Transfer to which account.
-`currency`|string|`YES`||The intended currency to transfer. (`USDT`, `BTC`, etc.)
-`amount`|float|`YES`||Amount of currency to transfer.
+`currency`|string|`YES`||The intended currency symbol to transfer. (`USDT`, `BTC`, etc.)
+`amount`|float|`YES`||The amount of currency transfered.
 
-Currently supports transferring assets across `wallet`, `option`, and `contract` accounts.
+Currently supports transferring assets across `wallet` and `contract` accounts.
 
 ### **Response:**
 
@@ -1131,7 +1051,7 @@ Time in force.
 
 `IOC`: Immediate or cancel. Meaning the order will be cancelled if not executed immediately. Recommended if you want to fill the entire order immediately.
 
-`FOK`: Fill or kill. Meaning the order will be canceled if not immediately filled. Recommended if you want to fill as much as possible, but not necessarily all of, the order immediately.
+`FOK`: Fill or kill. Meaning the order will be canceled if not immediately filled. 
 
 `LIMIT_MAKER`: Order will be cancelled if executed immediately.
 
@@ -1139,7 +1059,7 @@ Time in force.
 
 Order type.
 
-`LIMIT`: Orders to be executed given a specified price or better.
+`LIMIT`: Orders will be executed by a given specified price or better.
 
 
-`STOP`: Order that will be triggered once it reaches the `triggerPrice`.
+`STOP`: Order will be triggered once it reaches the `triggerPrice`.
