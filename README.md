@@ -6,9 +6,9 @@
 # Api Endpoints for Mexo Broker
 | Name | base endpoint |
 | --- | --- |
-| rest-api | https://api.mexo.com |
-| web-socket-streams | wss://wsapi.mexo.com |
-| user-data-stream | wss://wsapi.mexo.com |
+| rest-api | https://api.mexo.io |
+| web-socket-streams | wss://wsapi.mexo.io |
+| user-data-stream | wss://wsapi.mexo.io |
 
 
 #### If you have any question, please contact our customer service. We will answer you as soon as we can. Thanks.
